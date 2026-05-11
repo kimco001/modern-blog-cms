@@ -1,0 +1,46 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}All Categories{% endblock %}
+
+{% block content %}
+<div class="flex flex-col lg:flex-row gap-10">
+
+    <!-- Main Content -->
+    <div class="flex-1">
+        <h1 class="text-4xl font-bold mb-10">All Categories</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for category in categories %}
+            <a href="{% url 'category_detail' category.slug %}" 
+               class="block bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-sm hover:shadow-xl transition group border border-gray-100 dark:border-gray-700">
+                <h3 class="text-2xl font-semibold mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+                    {{ category.name }}
+                </h3>
+                {% if category.description %}
+                <p class="text-gray-600 dark:text-gray-400">{{ category.description }}</p>
+                {% endif %}
+                <span class="inline-block mt-6 text-blue-600 dark:text-blue-400 font-medium group-hover:underline">
+                    Browse posts →
+                </span>
+            </a>
+            {% empty %}
+            <p class="text-gray-500 dark:text-gray-400">No categories yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="w-full lg:w-80 lg:sticky lg:top-8 h-fit space-y-10">
+        <div>
+            <h3 class="text-lg font-semibold mb-4">🔥 Popular Posts</h3>
+            <div class="space-y-4 text-sm">
+                {% for popular in popular_posts %}
+                <a href="{{ popular.get_absolute_url }}" 
+                   class="block hover:text-blue-600 dark:hover:text-blue-400">{{ popular.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

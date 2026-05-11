@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BlogCMS{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <script>
+        // Enable dark mode support
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Navbar -->
+    <nav class="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex justify-between items-center">
+            
+            <a href="{% url 'post_list' %}" class="text-3xl font-bold tracking-tight text-blue-600">BlogCMS</a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8 text-lg">
+    <a href="{% url 'post_list' %}" class="hover:text-blue-600 transition">Home</a>
+    <a href="{% url 'all_categories' %}" class="hover:text-blue-600 transition">Categories</a>
+    <a href="{% url 'authors_list' %}" class="hover:text-blue-600 transition">Authors</a>
+    <a href="{% url 'about' %}" class="hover:text-blue-600 transition">About</a>
+    <a href="{% url 'contact' %}" class="hover:text-blue-600 transition">Contact</a>
+</div>
+
+            <div class="flex items-center gap-4">
+                <!-- Dark Mode Toggle -->
+                <button id="theme-toggle" class="w-10 h-10 flex items-center justify-center rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                    <i id="theme-icon" class="fas fa-moon text-xl"></i>
+                </button>
+
+                {% if request.user.is_staff or request.user.is_superuser %}
+                <a href="{% url 'admin:index' %}" target="_blank" class="bg-blue-600 text-white px-5 py-2.5 rounded-2xl hover:bg-blue-700 transition text-sm font-medium hidden md:flex items-center gap-2">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                {% endif %}
+
+                <button id="hamburger" class="md:hidden text-3xl text-gray-700 dark:text-gray-300">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden fixed inset-0 bg-white dark:bg-gray-900 z-50 pt-20 px-6">
+            <div class="flex flex-col gap-6 text-xl">
+                <a href="{% url 'post_list' %}" class="hover:text-blue-600">Home</a>
+                <a href="{% url 'all_categories' %}" class="hover:text-blue-600">Categories</a>
+                <a href="{% url 'about' %}" class="hover:text-blue-600">About</a>
+                <a href="{% url 'contact' %}" class="hover:text-blue-600">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-12 mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 text-center text-gray-500 dark:text-gray-400">
+            <p class="text-xl font-semibold text-gray-800 dark:text-gray-200">BlogCMS</p>
+            <p class="mt-2">Modern Django Blog &amp; CMS</p>
+            <p class="text-sm mt-6">&copy; 2026 All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        const icon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+
+        // Load saved preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        toggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+                icon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // Hamburger
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        hamburger.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            hamburger.innerHTML = mobileMenu.classList.contains('hidden') ? 
+                '<i class="fas fa-bars"></i>' : '<i class="fas fa-times"></i>';
+        });
+    </script>
+
+</body>
+</html>
