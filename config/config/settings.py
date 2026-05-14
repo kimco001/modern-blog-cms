@@ -65,7 +65,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'config.config.wsgi.application'
 
 # ====================== DATABASE ======================
 DATABASES = {
